@@ -1,6 +1,6 @@
 # MovieDex API
 ### Taylor Phelps
 
-*Made with NodeJS and Express and utilizing CORS and Morgan*
+###### An API that checks user queries against a list of movie data and filters it accordingly. You can check based on 'genre', 'country', and 'avg_vote'.
 
-[LiveSite](www.google.com)
+*Made with NodeJS and Express and utilizing CORS and Morgan*
