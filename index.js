@@ -52,7 +52,7 @@ function handleGetMovieInfo(req, res) {
   let { genre, country, avg_vote } = req.query;
   if (genre) {
     if (['genre', 'country', 'avg_vote'].includes(genre, country, avg_vote)) {
-      return res.status(400).send('Malfunction');
+      return res.status(400).send('Query needs to be a valid genre, country, or avg_vote');
     }
   }
 
