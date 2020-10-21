@@ -22,12 +22,15 @@
   },
 */
 
-// Imports 
+// Imports
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const movies = require('./moviedex.js');
+
+console.log(process.env.API_TOKEN);
 
 // Running imports on 'app'
 const app = express();
