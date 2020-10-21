@@ -54,7 +54,7 @@ app.use(function validateBearerToken(req, res, next) {
 function handleGetMovieInfo(req, res) {
   let { genre, country, avg_vote } = req.query;
   if (genre) {
-    if (['genre', 'country', 'avg_vote'].includes(genre, country, avg_vote)) {
+    if (!['genre', 'country', 'avg_vote'].includes(genre, country, avg_vote)) {
       return res.status(400).send('Query needs to be a valid genre, country, or avg_vote');
     }
   }
@@ -67,10 +67,12 @@ function handleGetMovieInfo(req, res) {
     );
   } else if (country) {
     results = movies.filter(movie =>
-      movie.country.toLocaleLowerCase().includes(country.toLowerCase())
+      movie.country.toLowerCase().includes(country.toLowerCase())
     );
   } else if (avg_vote) {
     results = movies.filter(movie => movie.avg_vote >= avg_vote);
+  } else {
+    results = movies;
   }
 
   res.send(results);
