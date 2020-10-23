@@ -6,7 +6,6 @@
 // Set up Authorization Header with an API token value
 // Set up general Security (headers, CORS)
 
-
 /* Sample Movie Listing 
 {
     filmtv_ID: 2,
@@ -30,11 +29,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 const movies = require('./moviedex.js');
 
-console.log(process.env.API_TOKEN);
-
 // Running imports on 'app'
 const app = express();
-app.use(morgan('common'));
+const morganSetting = process.env.NODE_ENV === 'production' ? 'tiny' : 'common';
+app.use(morgan(morganSetting));
 app.use(helmet());
 app.use(cors());
 
@@ -42,7 +40,6 @@ app.use(cors());
 app.use(function validateBearerToken(req, res, next) {
   const apiToken = process.env.API_TOKEN;
   const authToken = req.get('Authorization');
-  console.log('validate bearer token middleware');
 
   if (!authToken || authToken.split(' ')[1] !== apiToken) {
     return res.status(401).json({ error: 'Unauthorized request' });
@@ -55,7 +52,9 @@ function handleGetMovieInfo(req, res) {
   let { genre, country, avg_vote } = req.query;
   if (genre) {
     if (!['genre', 'country', 'avg_vote'].includes(genre, country, avg_vote)) {
-      return res.status(400).send('Query needs to be a valid genre, country, or avg_vote');
+      return res
+        .status(400)
+        .send('Query needs to be a valid genre, country, or avg_vote');
     }
   }
 
@@ -80,7 +79,21 @@ function handleGetMovieInfo(req, res) {
 // Setting up MOVIE route
 app.get('/movie', handleGetMovieInfo);
 
+// Hiding sensitive error messages
+
+app.use((error, req, res, next) => {
+  let response;
+  if (process.env.NODE_ENV === 'production') {
+    response = { error: { message: 'server error' } };
+  } else {
+    response = { error };
+  }
+  res.status(500).json(response);
+});
+
 // Listening on the PORT
-app.listen(8000, () => {
-  console.log('Server is listening on PORT 8000');
+const PORT = process.env.PORT || 8000;
+
+app.listen(PORT, () => {
+  console.log(`Server is listening on PORT ${PORT}`);
 });
